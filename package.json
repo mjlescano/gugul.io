@@ -1,0 +1,29 @@
+{
+  "name": "gugul",
+  "version": "0.1.0",
+  "main": "server.js",
+  "repository": "git@github.com:mjlescano/gugul.git",
+  "author": "Matías Lescano <mjlescano@protonmail.com>",
+  "license": "GPL-v3",
+  "dependencies": {
+    "google": "^2.1.0",
+    "lodash.debounce": "^4.0.8",
+    "micro": "^7.3.0",
+    "next": "~2.1.1",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-democracyos": "^1.2.1"
+  },
+  "scripts": {
+    "dev": "node .",
+    "build": "next build",
+    "start": "node ."
+  },
+  "engines": {
+    "node": "7.x.x",
+    "yarn": "~0.22.0"
+  }
+}

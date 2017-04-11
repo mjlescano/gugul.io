@@ -1,0 +1,14 @@
+# test directories
+test
+
+# asset directories
+static
+
+# configs
+.*ignore
+.eslintrc
+.*.yml
+
+# misc
+*.gz
+*.md
