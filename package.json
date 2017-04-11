@@ -11,7 +11,8 @@
     "micro": "^7.3.0",
     "next": "~2.1.1",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
@@ -19,8 +20,8 @@
   },
   "scripts": {
     "dev": "node .",
-    "build": "next build",
-    "start": "node ."
+    "build": "NODE_ENV=production next build",
+    "start": "NODE_ENV=production node ."
   },
   "engines": {
     "node": "7.x.x",
