@@ -1,5 +1,4 @@
 import { Component } from 'react'
-import debounce from 'lodash.debounce'
 
 export default class SearchInput extends Component {
   constructor (props) {
@@ -8,15 +7,12 @@ export default class SearchInput extends Component {
     this.state = {
       value: props.value || ''
     }
-
-    this.lazySubmit = debounce(this.submit, 600)
   }
 
   handleChange = (evt) => {
     const { onChange } = this.props
 
     this.setState({ value: evt.target.value }, () => {
-      this.lazySubmit()
       if (onChange) onChange(this.state.value)
     })
   }

@@ -1,11 +1,13 @@
 import { Component } from 'react'
 import ReactDOM from 'react-dom'
 import Router from 'next/router'
+import debounce from 'lodash.debounce'
 import search from '../lib/search/client'
 import Title from '../components/Title'
 import Layout from '../components/Layout'
 import Result from '../components/Result'
 import SearchInput from '../components/SearchInput'
+import LoadingResult from '../components/LoadingResult'
 
 export default class Page extends Component {
   constructor (props) {
@@ -14,8 +16,12 @@ export default class Page extends Component {
     this.state = {
       query: props.url.query && props.url.query.query,
       results: [],
-      error: null
+      error: null,
+      loading: false
     }
+
+    this.lazyLoading = debounce(this.loading, 400)
+    this.lazySearch = debounce(this.search, 900)
   }
 
   componentDidMount () {
@@ -26,7 +32,11 @@ export default class Page extends Component {
     this.setState({
       query,
       results: [],
-      error: null
+      error: null,
+      loading: false
+    }, () => {
+      this.lazyLoading()
+      this.lazySearch()
     })
 
     Router.push({
@@ -36,27 +46,41 @@ export default class Page extends Component {
   }
 
   handleSubmit = (query) => {
+    this.setState({ query }, this.search)
+  }
+
+  loading = () => {
+    this.setState({
+      loading: !!this.state.query
+    })
+  }
+
+  search = () => {
+    const query = this.state.query
+
+    this.setState({ loading: true })
+
     search(query)
       .then((results) => {
         this.setState({
           query,
           results,
-          error: null
+          error: null,
+          loading: false
         })
       })
       .catch((err) => {
+        let msg = 'Sorry, there was an error.'
+
         if (err.status === 429) {
-          return this.setState({
-            query,
-            results: [],
-            error: 'Sorry, Google rate limits private searchs, try again in a moment please.'
-          })
+          msg = 'Sorry, google forces a limit of private searches, try again in a moment please.'
         }
 
         this.setState({
           query,
           results: [],
-          error: 'Sorry, there was an error.'
+          loading: false,
+          error: msg
         })
       })
   }
@@ -66,7 +90,7 @@ export default class Page extends Component {
   }
 
   render () {
-    const { query, results, error } = this.state
+    const { query, results, error, loading } = this.state
 
     return (
       <Layout>
@@ -92,6 +116,11 @@ export default class Page extends Component {
             background-color: transparent;
           }
 
+          .search-error {
+            margin: 1em 0;
+            font-weight: 700;
+          }
+
           .results {
             padding-top: 2em;
           }
@@ -111,20 +140,26 @@ export default class Page extends Component {
         </header>
         <main className='container'>
           {error && (
-            <p>{error}</p>
-          )}
-          {results && results.length > 0 && (
-            <div className='results'>
-              {results.map((result, i) => {
-                if (!result.href) return null
-                return (
-                  <Result key={i} result={result} />
-                )
-              })}
+            <div className='search-error'>
+              {error}
             </div>
           )}
+          <div className='results'>
+            {!loading && results.length > 0 && results.map((result, i) => {
+              if (!result.href) return null
+              return <Result key={i} result={result} />
+            })}
+            {loading && LoadingResults}
+          </div>
         </main>
       </Layout>
     )
   }
 }
+
+const LoadingResults = (() => {
+  const amount = 10
+  const results = []
+  for (let i = 0; i < amount; i++) results.push(<LoadingResult key={i} />)
+  return results
+})()
