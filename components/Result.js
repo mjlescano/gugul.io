@@ -27,8 +27,7 @@ export default ({ result, key }) => (
     <h1>
       <Link
         href={result.href}
-        rel='nofollow noopener'
-        prefetch={key === 0}>
+        rel='nofollow noopener'>
         <a>{result.title}</a>
       </Link>
     </h1>

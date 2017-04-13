@@ -20,7 +20,7 @@ export default class Page extends Component {
       loading: false
     }
 
-    this.lazyLoading = debounce(this.loading, 400)
+    this.lazyLoading = debounce(this.loading, 350)
     this.lazySearch = debounce(this.search, 900)
   }
 
@@ -55,13 +55,19 @@ export default class Page extends Component {
     })
   }
 
+  _search = null
   search = () => {
     const query = this.state.query
 
     this.setState({ loading: true })
 
-    search(query)
+    const _search = this._search = search(query)
+
+    _search
       .then((results) => {
+        if (_search !== this._search) return
+        this._search = null
+
         this.setState({
           query,
           results,
@@ -70,6 +76,8 @@ export default class Page extends Component {
         })
       })
       .catch((err) => {
+        this._search = null
+
         let msg = 'Sorry, there was an error.'
 
         if (err.status === 429) {
