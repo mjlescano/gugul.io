@@ -49,37 +49,25 @@ export default () => (
         );
       }
 
-      // .loading-result :global(.title-enter) {
-      //   opacity: 0.01;
-      //   background-color: red;
-      // }
-      //
-      // .loading-result :global(.title-enter.title-enter-active) {
-      //   opacity: 1;
-      //   transition: opacity 1500ms ease-in;
-      //   background-color: blue;
-      // }
-      //
-      // .loading-result :global(.title-appear) {
-      //   opacity: 0.01;
-      //   background-color: cyan;
-      // }
-      //
-      // .loading-result :global(.title-appear.title-appear-active) {
-      //   opacity: 1;
-      //   transition: opacity 1500ms ease-in;
-      //   background-color: salmon;
-      // }
+      .loading-result :global(.title-appear) {
+        transform: scaleX(0);
+        transition: transform 275ms ease-in-out;
+        transform-origin: 0 0;
+      }
+
+      .loading-result :global(.title-appear.title-appear-active) {
+        transform: scaleX(1);
+      }
     `}</style>
     <CSSTransitionGroup
       transitionName='title'
-      transitionEnterTimeout={1500}
-      transitionLeaveTimeout={1500}
+      transitionEnter={false}
+      transitionLeave={false}
       transitionAppear
-      transitionAppearTimeout={1500}>
+      transitionAppearTimeout={275}>
       <h1 key='title'><span>{randSpaces(20, 55)}</span></h1>
+      <p><span>{randSpaces(35, 80)}</span></p>
     </CSSTransitionGroup>
-    <p><span>{randSpaces(35, 80)}</span></p>
   </div>
 )
 

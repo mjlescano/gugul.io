@@ -2,6 +2,7 @@ import { Component } from 'react'
 import ReactDOM from 'react-dom'
 import Router from 'next/router'
 import debounce from 'lodash.debounce'
+import times from 'lodash.times'
 import search from '../lib/search/client'
 import Title from '../components/Title'
 import Layout from '../components/Layout'
@@ -26,6 +27,19 @@ export default class Page extends Component {
 
   componentDidMount () {
     this.handleSubmit(this.state.query)
+  }
+
+  // Dont re-render new loading list
+  shouldComponentUpdate (nextProps, nextState) {
+    const results = this.state.results
+    const nextResults = nextState.results
+
+    if (this.state.loading === false) return true
+    if (nextState.loading === false) return true
+    if (results.length !== 0) return true
+    if (!nextResults || nextResults.length === 0) return false
+
+    return true
   }
 
   handleChange = (query) => {
@@ -98,6 +112,8 @@ export default class Page extends Component {
   }
 
   render () {
+    // this.state.loading = true
+    console.log(JSON.parse(JSON.stringify(this.state)))
     const { query, results, error, loading } = this.state
 
     return (
@@ -157,17 +173,10 @@ export default class Page extends Component {
               if (!result.href) return null
               return <Result key={i} result={result} />
             })}
-            {loading && LoadingResults}
+            {loading && times(10, (i) => <LoadingResult key={i} />)}
           </div>
         </main>
       </Layout>
     )
   }
 }
-
-const LoadingResults = (() => {
-  const amount = 10
-  const results = []
-  for (let i = 0; i < amount; i++) results.push(<LoadingResult key={i} />)
-  return results
-})()
