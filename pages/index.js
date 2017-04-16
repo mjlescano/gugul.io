@@ -95,7 +95,7 @@ export default class Page extends Component {
         let msg = 'Sorry, there was an error.'
 
         if (err.status === 429) {
-          msg = 'Sorry, google forces a limit of private searches, try again in a moment please.'
+          msg = 'Sorry, google forces a limit to private searches, try again in a moment please.'
         }
 
         this.setState({
@@ -112,17 +112,13 @@ export default class Page extends Component {
   }
 
   render () {
-    // this.state.loading = true
-    console.log(JSON.parse(JSON.stringify(this.state)))
     const { query, results, error, loading } = this.state
 
     return (
       <Layout>
         <style jsx>{`
           header {
-            padding: 20px 0;
-            border-bottom: 1px solid #ebebeb;
-            background-color: #fafafa;
+            padding: 2em 0 1em;
           }
 
           header :global(.search-input) {
