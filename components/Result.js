@@ -4,12 +4,12 @@ export default ({ result, key }) => (
   <div className='result'>
     <style jsx>{`
       .result {
-        margin-bottom: 2em;
+        margin-bottom: 2.4em;
       }
 
       h1 {
-        margin-bottom: .3em;
-        line-height: 1.3;
+        margin-bottom: .1em;
+        line-height: 1.2;
         font-family: 'Ovo', serif;
         font-size: 1.4em;
         cursor: default;
