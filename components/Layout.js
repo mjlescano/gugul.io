@@ -5,11 +5,10 @@ export default (props) => (
   <div>
     <Head>
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      <link href='https://fonts.googleapis.com/css?family=Ovo|Raleway&subset=latin-ext' rel='stylesheet' />
     </Head>
     <Title />
     <style jsx global>{`
-      @import url('https://fonts.googleapis.com/css?family=Playfair+Display|Raleway&subset=latin-ext');
-
       * {
         box-sizing: border-box;
       }

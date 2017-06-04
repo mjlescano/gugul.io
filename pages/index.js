@@ -129,7 +129,7 @@ export default class Page extends Component {
             border: 0;
             width: 100%;
             line-height: 1.3;
-            font-family: 'Playfair Display', serif;
+            font-family: 'Ovo', serif;
             font-size: 1.8em;
             outline: none;
             color: inherit;

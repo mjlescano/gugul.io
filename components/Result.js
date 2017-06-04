@@ -10,8 +10,8 @@ export default ({ result, key }) => (
       h1 {
         margin-bottom: .3em;
         line-height: 1.3;
-        font-family: 'Playfair Display', serif;
-        font-size: 1.8em;
+        font-family: 'Ovo', serif;
+        font-size: 1.4em;
         cursor: default;
       }
 
