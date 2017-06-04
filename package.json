@@ -6,27 +6,31 @@
   "author": "Matías Lescano <mjlescano@protonmail.com>",
   "license": "GPL-v3",
   "dependencies": {
-    "google": "^2.1.0",
-    "lodash.debounce": "^4.0.8",
-    "lodash.times": "^4.3.2",
-    "micro": "^7.3.0",
-    "next": "~2.1.1",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-transition-group": "^1.1.1",
-    "whatwg-fetch": "^2.0.3"
+    "check-node-version": "~2.1.0",
+    "google": "~2.1.0",
+    "lodash.debounce": "~4.0.8",
+    "lodash.times": "~4.3.2",
+    "micro": "~7.3.0",
+    "next": "~3.0.0-beta9",
+    "react": "~15.5.4",
+    "react-dom": "~15.5.4",
+    "react-transition-group": "~1.1.1",
+    "whatwg-fetch": "~2.0.3"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-democracyos": "^1.2.1"
+    "eslint": "~3.19.0",
+    "eslint-config-democracyos": "~1.2.1"
   },
   "scripts": {
-    "dev": "node .",
-    "build": "NODE_ENV=production next build",
-    "start": "NODE_ENV=production node ."
+    "check": "check-node-version --package",
+    "build": "next build",
+    "start": "node ."
   },
   "engines": {
-    "node": "7.x.x",
-    "yarn": "~0.22.0"
+    "node": "8.x.x",
+    "npm": "5.x.x"
+  },
+  "now": {
+    "alias": "gugul.io"
   }
 }
