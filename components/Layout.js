@@ -5,7 +5,7 @@ export default (props) => (
   <div>
     <Head>
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-      <link href='https://fonts.googleapis.com/css?family=Ovo|Raleway&subset=latin-ext' rel='stylesheet' />
+      <link href='https://fonts.googleapis.com/css?family=Ovo|Muli&subset=latin-ext' rel='stylesheet' />
     </Head>
     <Title />
     <style jsx global>{`
@@ -31,11 +31,11 @@ export default (props) => (
 
       body {
         font-size: 16px;
-        font-family: 'Raleway', sans-serif;
+        font-family: 'Muli', sans-serif;
         line-height: 1.5;
         color: #525252;
         text-rendering: optimizeLegibility;
-        backgorund-color: #fff;
+        background-color: #fff;
       }
 
       .container {

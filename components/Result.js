@@ -20,7 +20,7 @@ export default ({ result, key }) => (
       }
 
       .desc {
-        font-size: .9em;
+        font-size: .8em;
         hyphens: auto;
       }
 
