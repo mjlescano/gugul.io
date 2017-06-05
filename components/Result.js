@@ -19,9 +19,18 @@ export default ({ result, key }) => (
         cursor: pointer;
       }
 
-      p {
+      .desc {
         font-size: .9em;
         hyphens: auto;
+      }
+
+      .url {
+        font-size: .75em;
+        color: #aaa;
+      }
+
+      .url:hover {
+        color: #f6cf0d;
       }
     `}</style>
     <h1>
@@ -31,6 +40,11 @@ export default ({ result, key }) => (
         <a>{result.title}</a>
       </Link>
     </h1>
-    <p>{result.description || result.href}</p>
+    <p className='desc'>{result.description || result.href}</p>
+    <Link
+      href={result.href}
+      rel='nofollow noopener'>
+      <a className='url'>{result.link}</a>
+    </Link>
   </div>
 )
