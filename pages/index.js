@@ -187,8 +187,10 @@ export default class Page extends Component {
     const count = this.state.results.length
     let { selected } = this.state
 
-    if (count === 0) return
+    if (count <= 0) return
     if (++selected >= count) return
+
+    evt.preventDefault()
 
     this.selectResult(selected)
   }
@@ -197,8 +199,10 @@ export default class Page extends Component {
     const count = this.state.results.length
     let { selected } = this.state
 
-    if (count === 0) return
+    if (count <= 0) return
     if (--selected < 0) return this.focusSearch()
+
+    evt.preventDefault()
 
     this.selectResult(selected)
   }
