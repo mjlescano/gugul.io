@@ -14,7 +14,7 @@
     "lodash.times": "~4.3.2",
     "micro": "~7.3.0",
     "mousetrap": "~1.6.1",
-    "next": "~3.0.0-beta9",
+    "next": "~3.0.0-beta12",
     "react": "~15.5.4",
     "react-dom": "~15.5.4",
     "react-transition-group": "~1.1.1",

@@ -19,7 +19,7 @@ export default class Page extends Component {
     this.state = {
       query: props.url.query && props.url.query.query,
       results: [],
-      selected: 0,
+      selected: -1,
       error: null,
       loading: false
     }
@@ -31,9 +31,17 @@ export default class Page extends Component {
   componentDidMount () {
     this.handleSubmit(this.state.query)
 
-    Mousetrap.bind('down', this.selectNextResult)
-    Mousetrap.bind('up', this.selectPrevResult)
-    Mousetrap.bind('enter', this.enterResult)
+    this.mousetrap = new Mousetrap(window.document)
+
+    const handleKey = this.mousetrap.handleKey.bind(this.mousetrap)
+    this.mousetrap.handleKey = (char, mods, evt) => {
+      handleKey(char, mods, evt)
+      if (char === 'up' || char === 'down' || char === 'enter') return
+      this.selectSearch(this.state.query.length)
+    }
+
+    this.mousetrap.bind('down', this.selectNextResult)
+    this.mousetrap.bind('up', this.selectPrevResult)
   }
 
   // Dont re-render new loading list
@@ -53,7 +61,7 @@ export default class Page extends Component {
     this.setState({
       query,
       results: [],
-      selected: 0,
+      selected: -1,
       error: null,
       loading: false
     }, () => {
@@ -100,7 +108,7 @@ export default class Page extends Component {
         this.setState({
           query,
           results,
-          selected: 0,
+          selected: -1,
           error: null,
           loading: false
         })
@@ -117,15 +125,36 @@ export default class Page extends Component {
         this.setState({
           query,
           results: [],
-          selected: 0,
+          selected: -1,
           loading: false,
           error: msg
         })
       })
   }
 
+  selectSearch = (selectionStart = 0) => {
+    this.setState({ selected: -1 }, () => {
+      jump('header', {
+        duration: 200,
+        callback: () => {
+          const input = ReactDOM.findDOMNode(this.searchInput)
+
+          if (document.activeElement !== input) {
+            input.focus()
+            input.selectionStart = selectionStart
+            input.selectionEnd = this.state.query.length
+          }
+        }
+      })
+    })
+  }
+
   focusSearch = () => {
-    ReactDOM.findDOMNode(this.searchInput).focus()
+    this.selectSearch(0)
+  }
+
+  blurSearch = () => {
+    ReactDOM.findDOMNode(this.searchInput).blur()
   }
 
   selectResult = (selected) => {
@@ -161,8 +190,6 @@ export default class Page extends Component {
     if (count === 0) return
     if (++selected >= count) return
 
-    evt.preventDefault()
-
     this.selectResult(selected)
   }
 
@@ -171,18 +198,39 @@ export default class Page extends Component {
     let { selected } = this.state
 
     if (count === 0) return
-    if (--selected < 0) return
-
-    evt.preventDefault()
+    if (--selected < 0) return this.focusSearch()
 
     this.selectResult(selected)
   }
 
-  enterResult = (evt) => {
+  openResult = (evt) => {
     const { results, selected } = this.state
     const result = results[selected]
 
-    window.location = result.href
+    if (!result) return
+
+    if (evt.ctrlKey || evt.metaKey) {
+      window.open(result.href, '_blank').focus()
+    } else {
+      window.location = result.href
+    }
+  }
+
+  handleInputKeyDown = (evt) => {
+    if (evt.key === 'ArrowUp') {
+      this.blurSearch()
+      return this.selectPrevResult(evt)
+    }
+
+    if (evt.key === 'ArrowDown') {
+      this.blurSearch()
+      return this.selectNextResult(evt)
+    }
+
+    if (evt.key === 'Enter') {
+      this.blurSearch()
+      return this.openResult(evt)
+    }
   }
 
   render () {
@@ -234,6 +282,7 @@ export default class Page extends Component {
               placeholder='Gugul Search...'
               onChange={this.handleChange}
               onSubmit={this.handleSubmit}
+              onKeyDown={this.handleInputKeyDown}
               value={query}
               autoFocus />
           </div>
