@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import Mousetrap from 'mousetrap'
 
 export default class SearchInput extends Component {
   constructor (props) {
@@ -18,11 +19,9 @@ export default class SearchInput extends Component {
   }
 
   handleKeyDown = (evt) => {
-    if (evt.key === 'Enter' && !evt.ctrlKey) {
-      evt.preventDefault()
-      evt.stopPropagation()
-
-      this.setState({ value: evt.target.value }, this.submit)
+    if (evt.key === 'Enter') {
+      // TODO: verify passing of `evt`
+      Mousetrap.trigger('enter')
     }
   }
 
@@ -36,7 +35,6 @@ export default class SearchInput extends Component {
       <input
         {...this.props}
         onChange={this.handleChange}
-        onKeyDown={this.handleKeyDown}
         value={this.state.value} />
     )
   }

@@ -38,9 +38,22 @@ export default (props) => (
         background-color: #fff;
       }
 
+      ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: #ccc;
+      }
+      ::-moz-placeholder { /* Firefox 19+ */
+        color: #ccc;
+      }
+      :-ms-input-placeholder { /* IE 10+ */
+        color: #ccc;
+      }
+      :-moz-placeholder { /* Firefox 18- */
+        color: #ccc;
+      }
+
       .container {
-        padding-right: 20px;
-        padding-left: 20px;
+        padding-right: 10px;
+        padding-left: 10px;
         max-width: 600px;
         width: 100%;
       }
@@ -60,11 +73,6 @@ export default (props) => (
         color: inherit;
         font-family: inherit;
         text-decoration: none;
-      }
-
-      a:hover,
-      a.active {
-        color: #f6cf0d;
       }
     `}</style>
     { props.children }

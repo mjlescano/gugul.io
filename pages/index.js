@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 import Router from 'next/router'
 import debounce from 'lodash.debounce'
 import times from 'lodash.times'
+import Mousetrap from 'mousetrap'
+import jump from 'jump.js'
 import search from '../lib/search/client'
 import Title from '../components/Title'
 import Layout from '../components/Layout'
@@ -17,6 +19,7 @@ export default class Page extends Component {
     this.state = {
       query: props.url.query && props.url.query.query,
       results: [],
+      selected: 0,
       error: null,
       loading: false
     }
@@ -27,6 +30,10 @@ export default class Page extends Component {
 
   componentDidMount () {
     this.handleSubmit(this.state.query)
+
+    Mousetrap.bind('down', this.selectNextResult)
+    Mousetrap.bind('up', this.selectPrevResult)
+    Mousetrap.bind('enter', this.enterResult)
   }
 
   // Dont re-render new loading list
@@ -46,6 +53,7 @@ export default class Page extends Component {
     this.setState({
       query,
       results: [],
+      selected: 0,
       error: null,
       loading: false
     }, () => {
@@ -75,22 +83,30 @@ export default class Page extends Component {
 
     this.setState({ loading: true })
 
+    if (this._search) this._search.abort()
+
     const _search = this._search = search(query)
+
+    _search.aborted = false
+
+    _search.abort = () => {
+      _search.aborted = true
+    }
 
     _search
       .then((results) => {
-        if (_search !== this._search) return
-        this._search = null
+        if (_search.aborted) return
 
         this.setState({
           query,
           results,
+          selected: 0,
           error: null,
           loading: false
         })
       })
       .catch((err) => {
-        this._search = null
+        if (_search.aborted) return
 
         let msg = 'Sorry, there was an error.'
 
@@ -101,6 +117,7 @@ export default class Page extends Component {
         this.setState({
           query,
           results: [],
+          selected: 0,
           loading: false,
           error: msg
         })
@@ -111,8 +128,71 @@ export default class Page extends Component {
     ReactDOM.findDOMNode(this.searchInput).focus()
   }
 
+  selectResult = (selected) => {
+    this.setState({ selected }, this.scrollToSelectedResult)
+  }
+
+  scrollToSelectedResult = () => {
+    const el = document.querySelector('.result.selected')
+
+    if (!el) return
+
+    const rect = el.getBoundingClientRect()
+    const h = window.innerHeight || document.documentElement.clientHeight
+
+    const isAfterTop = rect.top >= 0
+    const isBeforeBottom = rect.bottom - h <= 0
+
+    // Element is fully visible
+    if (isAfterTop && isBeforeBottom) return
+
+    const offset = isAfterTop ? (rect.height + marginBottom(el)) - h : 0
+
+    jump(el, {
+      duration: 200,
+      offset
+    })
+  }
+
+  selectNextResult = (evt) => {
+    const count = this.state.results.length
+    let { selected } = this.state
+
+    if (count === 0) return
+    if (++selected >= count) return
+
+    evt.preventDefault()
+
+    this.selectResult(selected)
+  }
+
+  selectPrevResult = (evt) => {
+    const count = this.state.results.length
+    let { selected } = this.state
+
+    if (count === 0) return
+    if (--selected < 0) return
+
+    evt.preventDefault()
+
+    this.selectResult(selected)
+  }
+
+  enterResult = (evt) => {
+    const { results, selected } = this.state
+    const result = results[selected]
+
+    window.location = result.href
+  }
+
   render () {
-    const { query, results, error, loading } = this.state
+    const {
+      query,
+      results,
+      selected,
+      error,
+      loading
+    } = this.state
 
     return (
       <Layout>
@@ -125,7 +205,7 @@ export default class Page extends Component {
             display: block;
             cursor: text;
             margin: 0;
-            padding: 0;
+            padding: 0 10px;
             border: 0;
             width: 100%;
             line-height: 1.3;
@@ -165,9 +245,15 @@ export default class Page extends Component {
             </div>
           )}
           <div className='results'>
-            {!loading && results.length > 0 && results.map((result, i) => {
+            {!loading && results.map((result, index) => {
               if (!result.href) return null
-              return <Result key={i} result={result} />
+              return (
+                <Result
+                  key={index}
+                  selected={selected === index}
+                  result={result}
+                  onFocus={() => this.selectResult(index)} />
+              )
             })}
             {loading && times(10, (i) => <LoadingResult key={i} />)}
           </div>
@@ -175,4 +261,16 @@ export default class Page extends Component {
       </Layout>
     )
   }
+}
+
+function marginBottom (el) {
+  const marginBottom = document.defaultView
+    .getComputedStyle(el)
+    .getPropertyValue('margin-bottom')
+
+  return parsePixels(marginBottom)
+}
+
+function parsePixels (pxs) {
+  return Number(pxs.replace('px', ''))
 }

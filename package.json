@@ -7,10 +7,13 @@
   "license": "GPL-v3",
   "dependencies": {
     "check-node-version": "~2.1.0",
+    "classnames": "~2.2.5",
     "google": "~2.1.0",
+    "jump.js": "~1.0.2",
     "lodash.debounce": "~4.0.8",
     "lodash.times": "~4.3.2",
     "micro": "~7.3.0",
+    "mousetrap": "~1.6.1",
     "next": "~3.0.0-beta9",
     "react": "~15.5.4",
     "react-dom": "~15.5.4",
