@@ -13,12 +13,19 @@ import SearchInput from '../components/SearchInput'
 import LoadingResult from '../components/LoadingResult'
 
 export default class Page extends Component {
+  static async getInitialProps ({ query: { query } }) {
+    return {
+      results: await search(query),
+      query
+    }
+  }
+
   constructor (props) {
     super(props)
 
     this.state = {
-      query: props.url.query && props.url.query.query,
-      results: [],
+      query: props.query,
+      results: props.results,
       selected: -1,
       error: null,
       loading: false
@@ -29,8 +36,6 @@ export default class Page extends Component {
   }
 
   componentDidMount () {
-    this.handleSubmit(this.state.query)
-
     this.mousetrap = new Mousetrap(window.document)
 
     const handleKey = this.mousetrap.handleKey.bind(this.mousetrap)
