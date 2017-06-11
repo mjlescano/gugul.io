@@ -14,10 +14,18 @@ import LoadingResult from '../components/LoadingResult'
 
 export default class Page extends Component {
   static async getInitialProps ({ query: { query } }) {
-    return {
-      results: await search(query),
+    const props = {
+      results: [],
       query
     }
+
+    try {
+      props.results = await search(query)
+    } catch (err) {
+      console.log(err)
+    }
+
+    return props
   }
 
   constructor (props) {
