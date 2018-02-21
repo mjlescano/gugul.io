@@ -13,7 +13,9 @@ import SearchInput from '../components/SearchInput'
 import LoadingResult from '../components/LoadingResult'
 
 export default class Page extends Component {
-  static async getInitialProps ({ query: { query } }) {
+  static async getInitialProps (ctx) {
+    const { query } = ctx.query
+
     const props = {
       results: [],
       query
@@ -31,10 +33,12 @@ export default class Page extends Component {
   constructor (props) {
     super(props)
 
+    const { query = '', results = [] } = props
+
     this.state = {
-      query: props.query,
-      results: props.results,
-      selected: -1,
+      query,
+      results,
+      selected: results.length === 0 ? -1 : 0,
       error: null,
       loading: false
     }
@@ -48,13 +52,16 @@ export default class Page extends Component {
 
     const handleKey = this.mousetrap.handleKey.bind(this.mousetrap)
     this.mousetrap.handleKey = (char, mods, evt) => {
-      handleKey(char, mods, evt)
-      if (char === 'up' || char === 'down' || char === 'enter') return
+      const key = char.trim()
+      if (!key) return
+      handleKey(key, mods, evt)
+      if (key === 'up' || key === 'down' || key === 'enter') return
       this.selectSearch(this.state.query.length)
     }
 
     this.mousetrap.bind('down', this.selectNextResult)
     this.mousetrap.bind('up', this.selectPrevResult)
+    this.mousetrap.bind('enter', this.openResult)
   }
 
   // Dont re-render new loading list
@@ -121,7 +128,7 @@ export default class Page extends Component {
         this.setState({
           query,
           results,
-          selected: -1,
+          selected: results.length === 0 ? -1 : 0,
           error: null,
           loading: false
         })
@@ -222,15 +229,24 @@ export default class Page extends Component {
 
   openResult = (evt) => {
     const { results, selected } = this.state
-    const result = results[selected]
 
-    if (!result) return
+    if (selected === -1) {
+      if (results.length > 0) this.selectResult(0)
+      return
+    }
+
+    const result = results[selected]
 
     if (evt.ctrlKey || evt.metaKey) {
       window.open(result.href, '_blank').focus()
     } else {
       window.location = result.href
     }
+  }
+
+  handleResultFocus = (index, evt) => {
+    console.log('handleResultFocus', index, evt)
+    this.selectResult(index)
   }
 
   handleInputKeyDown = (evt) => {
@@ -315,10 +331,11 @@ export default class Page extends Component {
               if (!result.href) return null
               return (
                 <Result
+                  ref={(el) => { this.resultsEls[index] = el }}
                   key={index}
                   selected={selected === index}
                   result={result}
-                  onFocus={() => this.selectResult(index)} />
+                  onFocus={(evt) => this.handleResultFocus(index, evt)} />
               )
             })}
             {loading && times(10, (i) => <LoadingResult key={i} />)}

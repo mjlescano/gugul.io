@@ -7,10 +7,11 @@ export default ({
   onFocus,
   onBlur
 }) => (
-  <Link
-    href={result.href}
-    rel='noopener noreferrer'>
-    <a onFocus={onFocus} className={classNames('result', { selected })}>
+  <Link href={result.href}>
+    <a
+      onFocus={onFocus}
+      className={classNames('result', { selected })}
+      rel='noopener nofollow'>
       <style jsx>{`
         .result {
           display: block;

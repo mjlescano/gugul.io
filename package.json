@@ -1,28 +1,27 @@
 {
   "name": "gugul",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "server.js",
   "repository": "git@github.com:mjlescano/gugul.git",
   "author": "Matías Lescano <mjlescano@protonmail.com>",
   "license": "GPL-v3",
   "dependencies": {
-    "check-node-version": "~2.1.0",
-    "classnames": "~2.2.5",
-    "google": "~2.1.0",
-    "isomorphic-fetch": "~2.2.1",
-    "jump.js": "~1.0.2",
-    "lodash.debounce": "~4.0.8",
-    "lodash.times": "~4.3.2",
-    "micro": "~7.3.0",
-    "mousetrap": "~1.6.1",
-    "next": "~3.0.0-beta12",
-    "react": "~15.5.4",
-    "react-dom": "~15.5.4",
+    "check-node-version": "3.2.0",
+    "classnames": "2.2.5",
+    "google": "2.1.0",
+    "isomorphic-fetch": "2.2.1",
+    "jump.js": "1.0.2",
+    "lodash.debounce": "4.0.8",
+    "lodash.times": "4.3.2",
+    "mousetrap": "1.6.1",
+    "next": "5.0.0",
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
     "react-transition-group": "~1.1.1"
   },
   "devDependencies": {
-    "eslint": "~3.19.0",
-    "eslint-config-democracyos": "~1.2.1"
+    "eslint": "4.7.2",
+    "eslint-config-democracyos": "2.0.0"
   },
   "scripts": {
     "check": "check-node-version --package",
@@ -30,8 +29,8 @@
     "start": "node ."
   },
   "engines": {
-    "node": "8.x.x",
-    "npm": "5.x.x"
+    "node": "8",
+    "npm": "5"
   },
   "now": {
     "alias": "gugul.io",

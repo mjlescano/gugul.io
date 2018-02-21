@@ -4,25 +4,12 @@ const next = require('next')
 const search = require('./lib/search')
 
 const dev = process.env.NODE_ENV !== 'production'
+const PORT = 3000
+
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-app.prepare().then(() => {
-  createServer((req, res) => {
-    const parsedUrl = parse(req.url, true)
-    const { pathname } = parsedUrl
-
-    if (req.method === 'GET' && pathname === '/api/search') {
-      handleSearch(req, res, parsedUrl)
-    } else {
-      handle(req, res, parsedUrl)
-    }
-  }).listen(3000, (err) => {
-    if (err) throw err
-  })
-}).catch((err) => { throw err })
-
-function handleSearch (req, res, parsedUrl) {
+const handleSearch = async (req, res, parsedUrl) => {
   const { query: { q } } = parsedUrl
 
   res.setHeader('Content-Type', 'application/json')
@@ -32,10 +19,11 @@ function handleSearch (req, res, parsedUrl) {
     return res.end('[]')
   }
 
-  search(q).then((links) => {
+  try {
+    const links = await search(q)
     res.statusCode = 200
     res.end(JSON.stringify(links))
-  }).catch((err) => {
+  } catch (err) {
     if (dev) console.error(err)
 
     if (err.message === 'Too Many Requests') {
@@ -45,5 +33,24 @@ function handleSearch (req, res, parsedUrl) {
     }
 
     res.end()
+  }
+}
+
+const init = async () => {
+  await app.prepare()
+
+  createServer((req, res) => {
+    const parsedUrl = parse(req.url, true)
+    const { pathname } = parsedUrl
+
+    if (req.method === 'GET' && pathname === '/api/search') {
+      handleSearch(req, res, parsedUrl)
+    } else {
+      handle(req, res, parsedUrl)
+    }
+  }).listen(PORT, (err) => {
+    if (err) throw err
   })
 }
+
+init()
