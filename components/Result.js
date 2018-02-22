@@ -2,13 +2,14 @@ import Link from 'next/link'
 import classNames from 'classnames'
 
 export default ({
+  index,
   result,
   selected,
-  onFocus,
-  onBlur
+  onFocus
 }) => (
   <Link href={result.href}>
     <a
+      id={`result-${index}`}
       onFocus={onFocus}
       className={classNames('result', { selected })}
       rel='noopener nofollow'>

@@ -12,6 +12,16 @@ import Result from '../components/Result'
 import SearchInput from '../components/SearchInput'
 import LoadingResult from '../components/LoadingResult'
 
+const handledKeys = [
+  'alt',
+  'ctrl',
+  'down',
+  'enter',
+  'meta',
+  'tab',
+  'up'
+]
+
 export default class Page extends Component {
   static async getInitialProps (ctx) {
     const { query } = ctx.query
@@ -24,7 +34,7 @@ export default class Page extends Component {
     try {
       props.results = await search(query)
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
 
     return props
@@ -55,13 +65,13 @@ export default class Page extends Component {
       const key = char.trim()
       if (!key) return
       handleKey(key, mods, evt)
-      if (key === 'up' || key === 'down' || key === 'enter') return
+      if (handledKeys.includes(key)) return
+      console.log(key)
       this.selectSearch(this.state.query.length)
     }
 
     this.mousetrap.bind('down', this.selectNextResult)
     this.mousetrap.bind('up', this.selectPrevResult)
-    this.mousetrap.bind('enter', this.openResult)
   }
 
   // Dont re-render new loading list
@@ -181,6 +191,24 @@ export default class Page extends Component {
     this.setState({ selected }, this.scrollToSelectedResult)
   }
 
+  focusResult = (index) => {
+    if (this.state.selected === index) return
+
+    const searchInput = ReactDOM.findDOMNode(this.searchInput)
+
+    if (document.activeElement === searchInput) {
+      this.selectResult(index)
+    } else {
+      const result = document.getElementById(`result-${index}`)
+
+      if (result) {
+        result.focus()
+      } else {
+        this.selectResult(index)
+      }
+    }
+  }
+
   scrollToSelectedResult = () => {
     const el = document.querySelector('.result.selected')
 
@@ -212,7 +240,7 @@ export default class Page extends Component {
 
     evt.preventDefault()
 
-    this.selectResult(selected)
+    this.focusResult(selected)
   }
 
   selectPrevResult = (evt) => {
@@ -224,14 +252,14 @@ export default class Page extends Component {
 
     evt.preventDefault()
 
-    this.selectResult(selected)
+    this.focusResult(selected)
   }
 
   openResult = (evt) => {
     const { results, selected } = this.state
 
     if (selected === -1) {
-      if (results.length > 0) this.selectResult(0)
+      if (results.length > 0) this.focusResult(0)
       return
     }
 
@@ -242,11 +270,6 @@ export default class Page extends Component {
     } else {
       window.location = result.href
     }
-  }
-
-  handleResultFocus = (index, evt) => {
-    console.log('handleResultFocus', index, evt)
-    this.selectResult(index)
   }
 
   handleInputKeyDown = (evt) => {
@@ -331,11 +354,11 @@ export default class Page extends Component {
               if (!result.href) return null
               return (
                 <Result
-                  ref={(el) => { this.resultsEls[index] = el }}
                   key={index}
+                  index={index}
                   selected={selected === index}
                   result={result}
-                  onFocus={(evt) => this.handleResultFocus(index, evt)} />
+                  onFocus={() => this.selectResult(index)} />
               )
             })}
             {loading && times(10, (i) => <LoadingResult key={i} />)}
