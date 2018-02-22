@@ -5,7 +5,8 @@ export default ({
   index,
   result,
   selected,
-  onFocus
+  onFocus,
+  onUrlClick
 }) => (
   <Link href={result.href}>
     <a
@@ -27,11 +28,6 @@ export default ({
         .result:hover,
         .result.selected {
           background-color: #f5f5f5;
-        }
-
-        .url:hover {
-          cursor: inherit;
-          color: #f6cf0d;
         }
 
         .result.selected::before {
@@ -68,10 +64,37 @@ export default ({
           color: #aaa;
           word-break: break-all;
         }
+
+        .url span {
+          display: inline-block;
+          position: relative;
+          top: .1em;
+          padding-right: .4em;
+        }
+
+        .url svg path {
+          fill: #aaa;
+        }
+
+        .url:hover {
+          cursor: inherit;
+          color: #f6cf0d;
+        }
+
+        .url:hover svg path {
+          fill: #f6cf0d;
+        }
       `}</style>
       <h1>{result.title}</h1>
       <p className='desc'>{result.description || result.href}</p>
-      <div className='url'>{result.link}</div>
+      <div className='url' onClick={onUrlClick}>
+        <span>
+          <svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'>
+            <path d='M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z' />
+          </svg>
+        </span>
+        {result.link}
+      </div>
     </a>
   </Link>
 )

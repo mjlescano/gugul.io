@@ -22,6 +22,14 @@ const handledKeys = [
   'up'
 ]
 
+const openLink = (url, newWindow = false) => {
+  if (newWindow) {
+    window.open(url, '_blank').focus()
+  } else {
+    window.location = url
+  }
+}
+
 export default class Page extends Component {
   static async getInitialProps (ctx) {
     const { query } = ctx.query
@@ -262,11 +270,7 @@ export default class Page extends Component {
 
     const result = results[selected]
 
-    if (evt.ctrlKey || evt.metaKey) {
-      window.open(result.href, '_blank').focus()
-    } else {
-      window.location = result.href
-    }
+    openLink(result.href, evt.ctrlKey || evt.metaKey)
   }
 
   handleInputKeyDown = (evt) => {
@@ -284,6 +288,11 @@ export default class Page extends Component {
       this.blurSearch()
       return this.openResult(evt)
     }
+  }
+
+  handleUrlClick = (evt, url) => {
+    evt.preventDefault()
+    openLink(url, true)
   }
 
   render () {
@@ -332,7 +341,7 @@ export default class Page extends Component {
             <SearchInput
               ref={(input) => { this.searchInput = input }}
               className='search-input'
-              placeholder='Gugul Search...'
+              placeholder='Type your search…'
               onChange={this.handleChange}
               onSubmit={this.handleSubmit}
               onKeyDown={this.handleInputKeyDown}
@@ -355,7 +364,8 @@ export default class Page extends Component {
                   index={index}
                   selected={selected === index}
                   result={result}
-                  onFocus={() => this.selectResult(index)} />
+                  onFocus={() => this.selectResult(index)}
+                  onUrlClick={(evt) => this.handleUrlClick(evt, result.href)} />
               )
             })}
             {loading && times(10, (i) => <LoadingResult key={i} />)}
