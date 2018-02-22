@@ -53,7 +53,7 @@ export default class Page extends Component {
       loading: false
     }
 
-    this.lazyLoading = debounce(this.loading, 350)
+    this.lazyLoading = debounce(this.loading, 400)
     this.lazySearch = debounce(this.search, 900)
   }
 
@@ -66,7 +66,6 @@ export default class Page extends Component {
       if (!key) return
       handleKey(key, mods, evt)
       if (handledKeys.includes(key)) return
-      console.log(key)
       this.selectSearch(this.state.query.length)
     }
 
@@ -99,10 +98,8 @@ export default class Page extends Component {
       this.lazySearch()
     })
 
-    Router.push({
-      pathname: '/',
-      query: query ? { query } : null
-    })
+    const href = '/' + (query ? `?query=${query}` : '')
+    Router.push(href, href, { shallow: true })
   }
 
   handleSubmit = (query) => {
