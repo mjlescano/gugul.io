@@ -1,12 +1,12 @@
 const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
-const search = require('./lib/search')
+const config = require('dos-config')
+const search = require('./lib/search/server')
 
-const dev = process.env.NODE_ENV !== 'production'
-const PORT = 3000
-
+const dev = config.nodeEnv !== 'production'
 const app = next({ dev })
+
 const handle = app.getRequestHandler()
 
 const handleSearch = async (req, res, parsedUrl) => {
@@ -48,7 +48,7 @@ const init = async () => {
     } else {
       handle(req, res, parsedUrl)
     }
-  }).listen(PORT, (err) => {
+  }).listen(config.port, (err) => {
     if (err) throw err
   })
 }

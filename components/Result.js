@@ -8,7 +8,7 @@ export default ({
   onFocus,
   onUrlClick
 }) => (
-  <Link href={result.href}>
+  <Link href={result.url}>
     <a
       id={`result-${index}`}
       onFocus={onFocus}
@@ -86,14 +86,16 @@ export default ({
         }
       `}</style>
       <h1>{result.title}</h1>
-      <p className='desc'>{result.description || result.href}</p>
+      {result.description && (
+        <p className='desc'>{result.description}</p>
+      )}
       <div className='url' onClick={onUrlClick}>
         <span>
           <svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'>
             <path d='M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z' />
           </svg>
         </span>
-        {result.link}
+        {result.url}
       </div>
     </a>
   </Link>

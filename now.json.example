@@ -1,0 +1,8 @@
+{
+  "name": "gugul.io",
+  "alias": "gugul.io",
+  "type": "npm",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

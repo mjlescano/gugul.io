@@ -154,7 +154,7 @@ export default class Page extends Component {
         let msg = 'Sorry, there was an error.'
 
         if (err.status === 429) {
-          msg = 'Sorry, google forces a limit to private searches, try again in a moment please.'
+          msg = 'Sorry, the server reach the limit of maximum calls, try again in a moment please.'
         }
 
         this.setState({
@@ -270,7 +270,7 @@ export default class Page extends Component {
 
     const result = results[selected]
 
-    openLink(result.href, evt.ctrlKey || evt.metaKey)
+    openLink(result.url, evt.ctrlKey || evt.metaKey)
   }
 
   handleInputKeyDown = (evt) => {
@@ -357,7 +357,6 @@ export default class Page extends Component {
           )}
           <div className='results'>
             {!loading && results.map((result, index) => {
-              if (!result.href) return null
               return (
                 <Result
                   key={index}
@@ -365,7 +364,7 @@ export default class Page extends Component {
                   selected={selected === index}
                   result={result}
                   onFocus={() => this.selectResult(index)}
-                  onUrlClick={(evt) => this.handleUrlClick(evt, result.href)} />
+                  onUrlClick={(evt) => this.handleUrlClick(evt, result.url)} />
               )
             })}
             {loading && times(10, (i) => <LoadingResult key={i} />)}

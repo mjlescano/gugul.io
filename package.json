@@ -6,8 +6,8 @@
   "author": "Matías Lescano <mjlescano@protonmail.com>",
   "license": "GPL-v3",
   "dependencies": {
-    "check-node-version": "3.2.0",
     "classnames": "2.2.5",
+    "dos-config": "3.0.2",
     "google": "2.1.0",
     "isomorphic-fetch": "2.2.1",
     "jump.js": "1.0.2",
@@ -21,21 +21,16 @@
   },
   "devDependencies": {
     "eslint": "4.7.2",
-    "eslint-config-democracyos": "2.0.0"
+    "eslint-config-democracyos": "2.0.0",
+    "nodemon": "1.15.1"
   },
   "scripts": {
-    "check": "check-node-version --package",
     "build": "next build",
-    "start": "node ."
+    "start": "node .",
+    "dev": "nodemon ."
   },
   "engines": {
     "node": "8",
     "npm": "5"
-  },
-  "now": {
-    "alias": "gugul.io",
-    "env": {
-      "NODE_ENV": "production"
-    }
   }
 }
