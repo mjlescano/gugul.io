@@ -61,6 +61,23 @@ export default (props) => (
         background: rgba(246, 207, 13, .55);
       }
 
+      body.golden::after {
+        content: '';
+        display: block;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        opacity: .3;
+        transform: scale(-1, 1);
+        background-size: 100vw auto;
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-image: url('http://www.colmanweb.co.uk/Assets/PPT/SpecialRatios/GoldenRatio.png');
+      }
+
       .container {
         padding-right: 10px;
         padding-left: 10px;
@@ -70,8 +87,7 @@ export default (props) => (
 
       @media all and (min-width: 900px) {
         .container {
-          margin-left: 38.5%;
-          transform: translateX(-50%);
+          margin-left: 19.25%;
         }
       }
 
