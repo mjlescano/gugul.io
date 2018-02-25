@@ -58,7 +58,8 @@ export default class Page extends Component {
       results,
       selected: results.length === 0 ? -1 : 0,
       error: null,
-      loading: false
+      loading: false,
+      writing: false
     }
 
     this.lazyLoading = debounce(this.loading, 400)
@@ -100,7 +101,8 @@ export default class Page extends Component {
       results: [],
       selected: -1,
       error: null,
-      loading: false
+      loading: false,
+      writing: true
     }, () => {
       this.lazyLoading()
       this.lazySearch()
@@ -145,7 +147,8 @@ export default class Page extends Component {
           results,
           selected: results.length === 0 ? -1 : 0,
           error: null,
-          loading: false
+          loading: false,
+          writing: false
         })
       })
       .catch((err) => {
@@ -162,7 +165,8 @@ export default class Page extends Component {
           results: [],
           selected: -1,
           loading: false,
-          error: msg
+          error: msg,
+          writing: false
         })
       })
   }
@@ -301,7 +305,8 @@ export default class Page extends Component {
       results,
       selected,
       error,
-      loading
+      loading,
+      writing
     } = this.state
 
     return (
@@ -326,7 +331,7 @@ export default class Page extends Component {
             background-color: transparent;
           }
 
-          .search-error {
+          .search-msg {
             margin: 1em 0;
             font-weight: 700;
           }
@@ -351,24 +356,29 @@ export default class Page extends Component {
         </header>
         <main className='container'>
           {error && (
-            <div className='search-error'>
+            <div className='search-msg'>
               {error}
             </div>
           )}
-          <div className='results'>
-            {!loading && results.map((result, index) => {
-              return (
-                <Result
-                  key={index}
-                  index={index}
-                  selected={selected === index}
-                  result={result}
-                  onFocus={() => this.selectResult(index)}
-                  onUrlClick={(evt) => this.handleUrlClick(evt, result.url)} />
-              )
-            })}
-            {loading && times(10, (i) => <LoadingResult key={i} />)}
-          </div>
+          {!error && !loading && !writing && query && results.length === 0 && (
+            <div className='search-msg'>No results.</div>
+          )}
+          {!error && (results.length > 0 || loading) && (
+            <div className='results'>
+              {!loading && results.map((result, index) => {
+                return (
+                  <Result
+                    key={index}
+                    index={index}
+                    selected={selected === index}
+                    result={result}
+                    onFocus={() => this.selectResult(index)}
+                    onUrlClick={(evt) => this.handleUrlClick(evt, result.url)} />
+                )
+              })}
+              {loading && times(10, (i) => <LoadingResult key={i} />)}
+            </div>
+          )}
         </main>
       </Layout>
     )
