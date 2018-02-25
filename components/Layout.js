@@ -51,6 +51,16 @@ export default (props) => (
         color: #ccc;
       }
 
+      *::selection {
+        background: rgba(246, 207, 13, .55);
+      }
+      *::-moz-selection {
+        background: rgba(246, 207, 13, .55);
+      }
+      *::-webkit-selection {
+        background: rgba(246, 207, 13, .55);
+      }
+
       .container {
         padding-right: 10px;
         padding-left: 10px;
